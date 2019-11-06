@@ -3,10 +3,12 @@ import numpy as np
 #A = [[2,1,3,4],[1,-1,2,1],[0,0,1,3]]
 #b = [[2],[4],[1]]
 #c = [-2, 3, 4, -1]
+def func(c,x):
+    sum = 0
+    for index, c_element in enumerate(c):
+        sum += c_element*x[index]
+    return sum
 
-A = np.matrix('2. 1 3 4; 1 -1 2 1; 0 0 1 3')
-b = np.matrix('2; 4; 1')
-c = np.matrix('-2 3 4 -1')
 
 def jordan(A, razr_row, razr_column):
     A_old = A.copy()
@@ -66,7 +68,7 @@ def jordan(A, razr_row, razr_column):
 
 
 def check_negative(array):
-    return find_negative(array) != None
+    return not find_negative(array) is None
 
 def find_negative(array):
     for index, element in enumerate(array):
@@ -94,10 +96,10 @@ def find_basic_plan(A):
         return b
     negative_row = find_negative(b)
     razr_col = find_negative(A[negative_row,:A.shape[1] -1].A1)
-    if razr_col == None:
+    if razr_col is None:
         return
     razr_row = find_razr_row(A[:,razr_col].A1,b)
-    if razr_row == None:
+    if razr_row is None:
         return
     print(A)
     return find_basic_plan(jordan(A,razr_row,razr_col))
@@ -105,7 +107,6 @@ def find_basic_plan(A):
 
 def simplex(A, b, c, min=True):
     A_new = A.copy();
-    print(A_new)
     A_new = np.concatenate((A_new,b),axis=1)
     function_row = c.copy()
     function_row.resize([1, A_new.shape[1]], refcheck=False)
@@ -113,7 +114,8 @@ def simplex(A, b, c, min=True):
     A_new = np.concatenate((A_new,function_row),axis=0)
     find_negative(A_new[:,A_new.shape[1]-1])
     basic_plan = find_basic_plan(A_new)
-    if basic_plan.any() == None:
+    if basic_plan is None:
+        print('No basic plan')
         return
     
     while check_negative(A_new[A_new.shape[0]-1,:].A1):
@@ -126,7 +128,7 @@ def simplex(A, b, c, min=True):
                 razr_column = index
                 break
         if razr_column == -1:
-            return A_new[A_new.shape[0]-1,:]
+            return A_new[A_new.shape[0]-1,:].A1
         number = -1
         min_number = number
         razr_row = -1
@@ -146,9 +148,3 @@ def simplex(A, b, c, min=True):
 
 
 
-
-print("Something")
-
-print(simplex(A, b, c))
-# print(type(A.shape))
-# print(A[A.shape[0]-1])
