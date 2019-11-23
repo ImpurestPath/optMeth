@@ -9,6 +9,14 @@ def count_columns(A):
 def count_rows(A):
     return len(A[:, 0])
 
+def cx(c,x):
+    if (len(c) != len(x)):
+        print('c and x must be same length (c=',len(c),', x=',len(x),')')
+    val = 0
+    for i, ci in enumerate(c):
+        val += ci * x[i]
+    return val
+        
 
 # Cоздает матрицу
 # cons + 1 строк для ограничений и строки функции
@@ -196,4 +204,6 @@ c = [-2,3,4,-1]
 
 
 if __name__ == "__main__":
-    print(simplex(A, b, c))
+    x = simplex(A, b, c)
+    print(x)
+    print('cx= ', cx(c,list(x.values())))
